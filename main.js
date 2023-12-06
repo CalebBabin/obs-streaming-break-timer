@@ -54,7 +54,7 @@ function updateFavicon(progress = 0) {
 	);
 	ctx.stroke();
 
-	faviconTag.setAttribute('href', canvas.toDataURL());
+	canvas.toBlob((blob => faviconTag.setAttribute('href', URL.createObjectURL(blob))));
 }
 
 let lastBreak = Date.now();
@@ -67,7 +67,7 @@ setInterval(() => {
 	const minutes = Math.floor(remaining_ms / 1000 / 60) % 60;
 	const seconds = Math.floor(remaining_ms / 1000) % 60;
 
-	document.body.textContent = hours.padStart(2, '0')+':'+minutes.padStart(2, '0')+':'+seconds.padStart(2, '0')
+	document.body.textContent = String(hours).padStart(2, '0')+':'+String(minutes).padStart(2, '0')+':'+String(seconds).padStart(2, '0')
 
 	updateFavicon(Math.min(1, running_ms / config.duration))
 }, 1000);
