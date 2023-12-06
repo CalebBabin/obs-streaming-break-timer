@@ -63,9 +63,9 @@ setInterval(() => {
 	const running_ms = Date.now() - lastBreak;
 	const remaining_ms = config.duration - running_ms
 
-	const hours = Math.floor(remaining_ms / 1000 / 60 / 60);
-	const minutes = Math.floor(remaining_ms / 1000 / 60) % 60;
-	const seconds = Math.floor(remaining_ms / 1000) % 60;
+	const hours = Math.max(0, Math.floor(remaining_ms / 1000 / 60 / 60));
+	const minutes = Math.max(0, Math.floor(remaining_ms / 1000 / 60) % 60);
+	const seconds = Math.max(0, Math.floor(remaining_ms / 1000) % 60);
 
 	document.body.textContent = String(hours).padStart(2, '0')+':'+String(minutes).padStart(2, '0')+':'+String(seconds).padStart(2, '0')
 
