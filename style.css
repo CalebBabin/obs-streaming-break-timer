@@ -1,11 +1,9 @@
 :root {
-	font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-	line-height: 1.5;
+	font-family: monospace;
+	line-height: 1;
 	font-weight: 400;
 
 	color-scheme: light dark;
-	color: rgba(255, 255, 255, 0.87);
-	background-color: #242424;
 
 	font-synthesis: none;
 	text-rendering: optimizeLegibility;
@@ -31,9 +29,14 @@ body, html {
 	align-items: center;
 	margin: 0;
 }
+body {
+	color: rgba(255, 255, 255, 0.87);
+	background-color: #242424;
+	font-size: 20vw;
+}
 
 @media (prefers-color-scheme: light) {
-	:root {
+	body {
 		color: #213547;
 		background-color: #ffffff;
 	}

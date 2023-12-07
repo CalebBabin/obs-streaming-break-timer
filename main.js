@@ -23,13 +23,13 @@ function updateFavicon(progress = 0) {
 	canvas.height = 128;
 
 	ctx.lineWidth = canvas.width / 10;
-	ctx.lineCap="round"
+	ctx.lineCap = "round"
 
 	// goal line
 	ctx.strokeStyle = "#ff4444";
 	ctx.beginPath();
 	ctx.moveTo(canvas.width / 2, canvas.height / 2);
-	ctx.lineTo(canvas.width / 2, ctx.lineWidth*2);
+	ctx.lineTo(canvas.width / 2, ctx.lineWidth * 2);
 	ctx.stroke();
 
 	ctx.strokeStyle = "white";
@@ -37,8 +37,8 @@ function updateFavicon(progress = 0) {
 	ctx.beginPath();
 	ctx.moveTo(canvas.width / 2, canvas.height / 2);
 	ctx.lineTo(
-		canvas.width / 2 + Math.cos(progress * Math.PI * 2 - Math.PI/2) * canvas.width / 3.5,
-		canvas.height / 2 + Math.sin(progress * Math.PI * 2 - Math.PI/2) * canvas.width / 3.5
+		canvas.width / 2 + Math.cos(progress * Math.PI * 2 - Math.PI / 2) * canvas.width / 3.5,
+		canvas.height / 2 + Math.sin(progress * Math.PI * 2 - Math.PI / 2) * canvas.width / 3.5
 	);
 	ctx.stroke();
 
@@ -58,21 +58,40 @@ function updateFavicon(progress = 0) {
 }
 
 let lastBreak = Date.now();
+let isOnBreak = false;
 
-setInterval(() => {
+
+function updateTimer() {
+	if (isOnBreak) return;
+
 	const running_ms = Date.now() - lastBreak;
-	const remaining_ms = config.duration - running_ms
+	const remaining_ms = config.duration - running_ms;
 
 	const hours = Math.max(0, Math.floor(remaining_ms / 1000 / 60 / 60));
 	const minutes = Math.max(0, Math.floor(remaining_ms / 1000 / 60) % 60);
 	const seconds = Math.max(0, Math.floor(remaining_ms / 1000) % 60);
 
-	document.body.textContent = String(hours).padStart(2, '0')+':'+String(minutes).padStart(2, '0')+':'+String(seconds).padStart(2, '0')
+	document.body.textContent = String(hours).padStart(2, '0') + ':' + String(minutes).padStart(2, '0') + ':' + String(seconds).padStart(2, '0');
 
-	updateFavicon(Math.min(1, running_ms / config.duration))
-}, 1000);
+	updateFavicon(Math.min(1, running_ms / config.duration));
+};
+
+setInterval(updateTimer, 1000);
+
+
+function checkIfOnBreak(scene_name) {
+	if (scene_name === config.brb_scene) {
+		isOnBreak = true;
+		document.body.textContent = "BRB";
+	} else if (isOnBreak) {
+		lastBreak = Date.now();
+		isOnBreak = false;
+	}
+	updateTimer();
+}
 
 window.addEventListener('obsSceneChanged', (e) => {
-	console.log(e);
-	document.body.textContent = 'event triggered!' + ' ' +JSON.stringify(e);
+	checkIfOnBreak(e.detail.name);
 });
+
+checkIfOnBreak(obsstudio.getCurrentScene());
